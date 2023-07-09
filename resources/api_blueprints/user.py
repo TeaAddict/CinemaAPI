@@ -11,7 +11,7 @@ from models import UserModel, RoleModel, MovieModel, SeatModel, ShowtimeModel, T
 
 from functools import wraps
 
-blp = Blueprint("user", __name__, description="Operations on users", url_prefix="/api/user")
+blp = Blueprint("user", __name__, description="Operations on users", url_prefix="/user")
 
 
 ################################################################################################

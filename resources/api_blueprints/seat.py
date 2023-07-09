@@ -42,7 +42,7 @@ class SeatDelete(MethodView):
             abort(400, message=str(e))
 
 
-@blp.route("/<showtime_id>")
+@blp.route("/get/<showtime_id>")
 class SeatGet(MethodView):
     @blp.response(200, PlainSeatsSchema(many=True))
     def get(self, showtime_id):

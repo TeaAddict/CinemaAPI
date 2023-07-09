@@ -41,7 +41,7 @@ class ShowtimeDelete(MethodView):
             abort(500, message=str(e))
 
 
-@blp.route("/<int:movie_id>")
+@blp.route("/get/<int:movie_id>")
 class ShowtimeAdd(MethodView):
     @blp.response(200, PlainShowtimeSchema(many=True))
     def get(self, movie_id):
