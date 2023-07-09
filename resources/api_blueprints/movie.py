@@ -1,10 +1,9 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
-from flask_jwt_extended import jwt_required, get_jwt
 from db import db
 from models import MovieModel
-from schemas import MovieSchema, PlainMovieSchema, MovieGenreSchema
+from schemas import MovieSchema, MovieGenreSchema
 from resources.api_blueprints.user import role_required
 
 blp = Blueprint("movie", __name__, description="Operations on movies", url_prefix="/movie")

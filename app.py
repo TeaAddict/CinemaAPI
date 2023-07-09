@@ -26,9 +26,7 @@ def create_app(db_url=None):
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-    # Alchemy configuration
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
-    # DATABASE_URL="postgresql://postgres:password@localhost:5432/cinema_db"
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -38,7 +36,6 @@ def create_app(db_url=None):
         db.create_all()
 
     migrate = Migrate(app, db, render_as_batch=True)
-    #migrate = Migrate(app, db)
 
     api = Api(app)
 

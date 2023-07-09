@@ -2,7 +2,6 @@ from marshmallow import Schema, fields
 
 
 class PlainRoleSchema(Schema):
-    #id = fields.Str(dump_only=True)
     name = fields.Str(dump_only=True)
 
 
@@ -75,7 +74,6 @@ class GenreSchema(PlainGenreSchema):
 
 
 class MovieSchema(PlainMovieSchema):
-    #showtimes = fields.Nested(PlainShowtimeSchema(), dump_only=True)
     showtimes = fields.List(fields.Nested(MovieShowtimeSchema), dump_only=True)
 
 

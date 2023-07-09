@@ -4,17 +4,15 @@ from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, verify_jwt_in_request, get_jwt
 from blocklist import BLOCKLIST
+from functools import wraps
 from db import db
 
 from schemas import UserSchema, InputTicketSchema, OutputTicketSchema
 from models import UserModel, RoleModel, MovieModel, SeatModel, ShowtimeModel, TicketModel
 
-from functools import wraps
 
 blp = Blueprint("user", __name__, description="Operations on users", url_prefix="/user")
 
-
-################################################################################################
 
 def role_required(role):
     def decorator(func):
@@ -29,7 +27,6 @@ def role_required(role):
             return func(*args, **kwargs)
         return wrapper
     return decorator
-################################################################################################
 
 
 @blp.route("/refresh-token")
@@ -154,7 +151,6 @@ class UserBuy(MethodView):
         return ticket
 
 
-###########################################################################
 # Testing route
 @blp.route("/all")
 class UserGetAll(MethodView):
@@ -162,4 +158,4 @@ class UserGetAll(MethodView):
     def get(self):
         users = UserModel.query.all()
         return users
-###########################################################################
+
