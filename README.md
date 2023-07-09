@@ -1,6 +1,7 @@
 # Cinema Api
 Created this api to learn some web development.
 
+
 Current features:
 * Register/Login/refresh users with JWT tokens.
 * Add/use "admin" roles to protect endpoints from unauthorized users.
