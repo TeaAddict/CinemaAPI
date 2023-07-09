@@ -12,7 +12,7 @@ from db import db
 
 blp = Blueprint("seat", __name__, description="Operations on seat", url_prefix="/seat")
 
-@blp.route("/add/<int:seat_num>/<int:showtime_id>")
+@blp.route("/<int:seat_num>/<int:showtime_id>")
 class SeatAdd(MethodView):
     @role_required("admin")
     def post(self, seat_num, showtime_id):
@@ -26,7 +26,7 @@ class SeatAdd(MethodView):
             abort(400, message=str(e))
 
 
-@blp.route("/delete/<int:showtime_id>")
+@blp.route("/<int:showtime_id>")
 class SeatDelete(MethodView):
     @role_required("admin")
     def delete(self, showtime_id):
@@ -42,7 +42,7 @@ class SeatDelete(MethodView):
             abort(400, message=str(e))
 
 
-@blp.route("/get/<showtime_id>")
+@blp.route("/<int:showtime_id>")
 class SeatGet(MethodView):
     @blp.response(200, PlainSeatsSchema(many=True))
     def get(self, showtime_id):

@@ -9,9 +9,9 @@ from resources.api_blueprints.user import role_required
 
 blp = Blueprint("movie", __name__, description="Operations on movies", url_prefix="/movie")
 
-@blp.route("/create")
-class MovieCreate(MethodView):
 
+@blp.route("/")
+class Movie(MethodView):
     @role_required("admin")
     @blp.arguments(MovieSchema)
     def post(self, movie_data):
@@ -23,8 +23,14 @@ class MovieCreate(MethodView):
         except SQLAlchemyError as e:
             abort(500, message=str(e))
 
-@blp.route("/delete/<int:movie_id>")
-class MovieCreate(MethodView):
+    @blp.response(200, MovieGenreSchema(many=True))
+    def get(self):
+        movies = MovieModel.query.all()
+        return movies
+
+
+@blp.route("/<int:movie_id>")
+class MovieId(MethodView):
     @role_required("admin")
     def delete(self, movie_id):
         movie = MovieModel().query.get_or_404(movie_id)
@@ -40,23 +46,15 @@ class MovieCreate(MethodView):
         #abort(400, message="Error deleting movie.")
 
 
-@blp.route("/get/<movie_id>")
-class MovieGet(MethodView):
+@blp.route("/<int:movie_id>")
+class MovieGetId(MethodView):
     @blp.response(200, MovieSchema())
     def get(self, movie_id):
         movie = MovieModel.query.get_or_404(movie_id)
         return movie
 
 
-@blp.route("/get")
-class MovieGet(MethodView):
-    @blp.response(200, MovieGenreSchema(many=True))
-    def get(self):
-        movies = MovieModel.query.all()
-        return movies
-
-
-@blp.route("/get/all")
+@blp.route("/all")
 class MovieGet(MethodView):
     @blp.response(200, MovieSchema(many=True))
     def get(self):

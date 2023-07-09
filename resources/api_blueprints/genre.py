@@ -12,7 +12,7 @@ from db import db
 
 blp = Blueprint("genre", __name__, description="Operations on genres", url_prefix="/genre")
 
-@blp.route("/create")
+@blp.route("/")
 class GenreAdd(MethodView):
     @role_required("admin")
     @blp.arguments(GenreSchema)
@@ -61,7 +61,7 @@ class Genre(MethodView):
         return genres
 
 
-@blp.route("/<genre_id>")
+@blp.route("/<int:genre_id>")
 class Genre(MethodView):
     @role_required("admin")
     def delete(self, genre_id):

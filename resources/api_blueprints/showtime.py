@@ -12,7 +12,7 @@ from models import ShowtimeModel
 blp = Blueprint("showtime", __name__, description="Operations on showtimes", url_prefix="/showtime")
 
 
-@blp.route("/add/<int:movie_id>")
+@blp.route("/<int:movie_id>")
 class ShowtimeAdd(MethodView):
     @role_required("admin")
     @blp.arguments(ShowtimeSchema)
@@ -26,7 +26,7 @@ class ShowtimeAdd(MethodView):
             abort(500, message=str(e))
 
 
-@blp.route("/delete/<int:showtime_id>")
+@blp.route("/<int:showtime_id>")
 class ShowtimeDelete(MethodView):
     @role_required("admin")
     def delete(self, showtime_id):
@@ -41,7 +41,7 @@ class ShowtimeDelete(MethodView):
             abort(500, message=str(e))
 
 
-@blp.route("/get/<int:movie_id>")
+@blp.route("/<int:movie_id>")
 class ShowtimeAdd(MethodView):
     @blp.response(200, PlainShowtimeSchema(many=True))
     def get(self, movie_id):

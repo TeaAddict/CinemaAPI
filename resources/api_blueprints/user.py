@@ -32,7 +32,7 @@ def role_required(role):
 ################################################################################################
 
 
-@blp.route("/refresh")
+@blp.route("/refresh-token")
 class RefreshToken(MethodView):
     @jwt_required(refresh=True)
     def post(self):
@@ -119,7 +119,7 @@ class UserAccount(MethodView):
         return user
 
 
-@blp.route("/delete/<int:user_id>")
+@blp.route("/<int:user_id>")
 class UserDelete(MethodView):
     @jwt_required(fresh=True)
     def delete(self, user_id):
@@ -156,7 +156,7 @@ class UserBuy(MethodView):
 
 ###########################################################################
 # Testing route
-@blp.route("/getall")
+@blp.route("/all")
 class UserGetAll(MethodView):
     @blp.response(200, UserSchema(many=True))
     def get(self):
