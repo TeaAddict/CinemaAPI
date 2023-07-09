@@ -28,11 +28,16 @@ class MovieCreate(MethodView):
     @role_required("admin")
     def delete(self, movie_id):
         movie = MovieModel().query.get_or_404(movie_id)
-        if not movie.showtimes:
-            db.session.delete(movie)
-            db.session.commit()
-            return {"message": f"Successfully deleted movie"}
-        abort(400, message="Error deleting movie.")
+        for showtime in movie.showtimes:
+            for seat in showtime.seats:
+                db.session.delete(seat)
+            db.session.delete(showtime)
+
+        #if not movie.showtimes:
+        db.session.delete(movie)
+        db.session.commit()
+        return {"message": f"Successfully deleted movie"}
+        #abort(400, message="Error deleting movie.")
 
 
 @blp.route("/get/<movie_id>")
