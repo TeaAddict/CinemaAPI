@@ -9,3 +9,4 @@ Current features:
 * Add multiple showtimes to movie, with date and time. 
 * Add seats to showtime and track which seats are booked.
 * Add genres to be able to group movies by genre.
+* Buy movie ticket(currently actual payment transaction not implemented, only saves booking data to user account)
