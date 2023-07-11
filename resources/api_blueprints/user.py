@@ -157,9 +157,9 @@ class UserBuy(MethodView):
         return ticket
 
 
-# Testing route
 @blp.route("/all")
 class UserGetAll(MethodView):
+    @role_required("admin")
     @blp.response(200, UserSchema(many=True))
     def get(self):
         users = UserModel.query.all()
