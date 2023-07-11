@@ -2,6 +2,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 from db import db
+from cache import cache
 from models import MovieModel
 from schemas import MovieSchema, MovieGenreSchema
 from resources.api_blueprints.user import role_required
@@ -23,6 +24,7 @@ class Movie(MethodView):
             abort(500, message=str(e))
 
     @blp.response(200, MovieGenreSchema(many=True))
+    @cache.cached(timeout=300)
     def get(self):
         movies = MovieModel.query.all()
         return movies
