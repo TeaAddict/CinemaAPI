@@ -20,9 +20,9 @@ class SeatAdd(MethodView):
                 seat = SeatModel(seat_number=i, showtime_id=showtime_id)
                 db.session.add(seat)
             db.session.commit()
-            return {"message": "Seats successfully added."}
+            return {"message": "Seats successfully added."}, 201
         except SQLAlchemyError as e:
-            abort(400, message=str(e))
+            abort(500, message=str(e))
 
 
 @blp.route("/<int:showtime_id>")
@@ -31,14 +31,12 @@ class SeatDelete(MethodView):
     def delete(self, showtime_id):
         try:
             selected_rows = SeatModel.query.filter_by(showtime_id=showtime_id).all()
-
             for row in selected_rows:
                 db.session.delete(row)
-
             db.session.commit()
-            return {"message": "Seats successfully deleted."}
+            return {"message": "Seats successfully deleted."}, 200
         except SQLAlchemyError as e:
-            abort(400, message=str(e))
+            abort(500, message=str(e))
 
 
 @blp.route("/<int:showtime_id>")

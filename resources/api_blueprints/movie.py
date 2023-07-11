@@ -19,7 +19,7 @@ class Movie(MethodView):
         try:
             db.session.add(movie)
             db.session.commit()
-            return {"message": f"Successfully created movie: {movie_data['movie_name']}"}
+            return {"message": f"Successfully created movie: {movie_data['movie_name']}"}, 201
         except SQLAlchemyError as e:
             abort(500, message=str(e))
 
@@ -35,16 +35,16 @@ class MovieId(MethodView):
     @role_required("admin")
     def delete(self, movie_id):
         movie = MovieModel().query.get_or_404(movie_id)
-        for showtime in movie.showtimes:
-            for seat in showtime.seats:
-                db.session.delete(seat)
-            db.session.delete(showtime)
-
-        #if not movie.showtimes:
-        db.session.delete(movie)
-        db.session.commit()
-        return {"message": f"Successfully deleted movie"}
-        #abort(400, message="Error deleting movie.")
+        try:
+            for showtime in movie.showtimes:
+                for seat in showtime.seats:
+                    db.session.delete(seat)
+                db.session.delete(showtime)
+            db.session.delete(movie)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            abort(500, message=str(e))
+        return {"message": f"Successfully deleted movie"}, 200
 
 
 @blp.route("/<int:movie_id>")

@@ -53,8 +53,11 @@ class UserRegister(MethodView):
         role = RoleModel(name="regular")
         user.roles.append(role)
 
-        db.session.add(user)
-        db.session.commit()
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            abort(500, message=str(e))
 
         access_token = create_access_token(identity=user.id, fresh=True)
         refresh_token = create_refresh_token(identity=user.id)
@@ -71,10 +74,13 @@ class AdminUserId(MethodView):
     def post(self, user_id):
         user = UserModel.query.get_or_404(user_id)
         role = RoleModel(name="admin")
-        user.roles.append(role)
-        db.session.add(user)
-        db.session.commit()
-        return {"message": f"added admin role to user: {user.username}"}
+        try:
+            user.roles.append(role)
+            db.session.add(user)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            abort(500, message=str(e))
+        return {"message": f"added admin role to user: {user.username}"}, 201
 
     @role_required("admin")
     @jwt_required()
@@ -93,7 +99,7 @@ class UserLogin(MethodView):
         if user and pbkdf2_sha256.verify(user_data["password"], user.password):
             access_token = create_access_token(identity=user.id, fresh=True)
             refresh_token = create_refresh_token(identity=user.id)
-            return {"access_token": access_token, "refresh_token": refresh_token}
+            return {"access_token": access_token, "refresh_token": refresh_token}, 201
         abort(401, message="Invalid credentials.")
 
 
@@ -103,7 +109,7 @@ class UserLogout(MethodView):
     def post(self):
         jti = get_jwt()["jti"]
         BLOCKLIST.add(jti)
-        return {"message": "Successfully logged out."}
+        return {"message": "Successfully logged out."}, 201
 
 
 @blp.route("/account")
@@ -123,7 +129,7 @@ class UserDelete(MethodView):
         user = UserModel.query.get_or_404(user_id)
         db.session.delete(user)
         db.session.commit()
-        return {"message": "user deleted."}
+        return {"message": "user deleted."}, 200
 
 
 @blp.route("/buy")

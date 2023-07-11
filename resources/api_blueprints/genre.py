@@ -20,9 +20,9 @@ class GenreAdd(MethodView):
         try:
             db.session.add(genre)
             db.session.commit()
-            return {"message": "Successfully created genre."}
+            return {"message": "Successfully created genre."}, 201
         except SQLAlchemyError as e:
-            abort(400, message=str(e))
+            abort(500, message=str(e))
 
 
 @blp.route("/<int:genre_id>/<int:movie_id>")
@@ -37,7 +37,7 @@ class GenreMovieUnlink(MethodView):
             db.session.commit()
         except SQLAlchemyError:
             abort(500, message="An error occurred while committing changes to database.")
-        return {"message": "Successfully linked genre and movie."}
+        return {"message": "Successfully linked genre and movie."}, 201
 
     @role_required("admin")
     def delete(self, genre_id, movie_id):
@@ -49,7 +49,7 @@ class GenreMovieUnlink(MethodView):
             db.session.commit()
         except SQLAlchemyError:
             abort(500, message="An error occurred while committing changes to database.")
-        return {"message": "Successfully unlinked genre and movie."}
+        return {"message": "Successfully unlinked genre and movie."}, 200
 
 
 @blp.route("/")
@@ -71,4 +71,4 @@ class Genre(MethodView):
             db.session.commit()
         except SQLAlchemyError:
             abort(500, message="Problem removing movie links from genre, deleting genre or committing database changes.")
-        return {"message": "Successfully deleted genre."}
+        return {"message": "Successfully deleted genre."}, 200

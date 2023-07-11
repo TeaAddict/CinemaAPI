@@ -19,7 +19,7 @@ class ShowtimeAdd(MethodView):
         try:
             db.session.add(showtime)
             db.session.commit()
-            return {"message": "Successfully added showtime to movie."}
+            return {"message": "Successfully added showtime to movie."}, 201
         except SQLAlchemyError as e:
             abort(500, message=str(e))
 
@@ -34,7 +34,7 @@ class ShowtimeDelete(MethodView):
                 db.session.delete(seat)
             db.session.delete(showtime)
             db.session.commit()
-            return {"message": "Successfully deleted showtime."}
+            return {"message": "Successfully deleted showtime."}, 200
         except SQLAlchemyError as e:
             abort(500, message=str(e))
 
