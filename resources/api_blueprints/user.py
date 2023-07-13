@@ -7,9 +7,8 @@ from blocklist import BLOCKLIST
 from functools import wraps
 from db import db
 
-from schemas import UserSchema, InputTicketSchema, OutputTicketSchema
-from models import UserModel, RoleModel, MovieModel, SeatModel, ShowtimeModel, TicketModel
-
+from schemas import UserSchema, UserAccountSchema
+from models import UserModel, RoleModel, SeatModel, ShowtimeModel, MovieModel
 
 blp = Blueprint("user", __name__, description="Operations on users", url_prefix="/user")
 
@@ -115,11 +114,19 @@ class UserLogout(MethodView):
 @blp.route("/account")
 class UserAccount(MethodView):
     @jwt_required()
-    @blp.response(200, UserSchema)
+    @blp.response(200, UserAccountSchema)
     def get(self):
         user_id = get_jwt()["sub"]
         user = UserModel.query.get_or_404(user_id)
-        return user
+        user_movies = []
+        for seat in user.seats:
+            showtime = ShowtimeModel.query.get_or_404(seat.showtime_id)
+            movie = MovieModel.query.get_or_404(showtime.movie_id)
+            user_movies.append({"movie": movie.movie_name,
+                                "showtime": showtime.datetime,
+                                "seat_number": seat.seat_number})
+        user_data = {"username": user.username, "password": user.password, "movies": user_movies}
+        return user_data
 
 
 @blp.route("/<int:user_id>")
@@ -132,29 +139,25 @@ class UserDelete(MethodView):
         return {"message": "user deleted."}, 200
 
 
-@blp.route("/buy")
+@blp.route("/buy/<int:seat_id>")
 class UserBuy(MethodView):
     @jwt_required()
-    @blp.arguments(InputTicketSchema)
-    @blp.response(200, OutputTicketSchema)
-    def post(self, buy_data):
+    @blp.response(200, UserSchema)
+    def post(self, seat_id):
         user = UserModel.query.get_or_404(get_jwt()["sub"])
-        movie = MovieModel.query.get_or_404(buy_data["movie"])
-        showtime = ShowtimeModel.query.get_or_404(buy_data["showtime"])
-        seat = SeatModel.query.get_or_404(buy_data["seat"])
-        ticket = TicketModel(movie=movie.movie_name, showtime=showtime.datetime, seat=seat.seat_number)
+        seat = SeatModel.query.get_or_404(seat_id)
 
-        if seat.is_booked:
+        if seat.user_id:
             abort(500, message="Seat is already taken.")
 
         try:
-            seat.is_booked = True
-            user.tickets.append(ticket)
+            seat.user_id = get_jwt()["sub"]
+            user.seats.append(seat)
             db.session.add(user)
             db.session.commit()
         except SQLAlchemyError as e:
             abort(500, message=str(e))
-        return ticket
+        return user
 
 
 @blp.route("/all")

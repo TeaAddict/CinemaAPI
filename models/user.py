@@ -9,4 +9,4 @@ class UserModel(db.Model):
 
     roles = db.relationship("RoleModel", back_populates="users", secondary="users_roles")
 
-    tickets = db.relationship("TicketModel", back_populates="user")
+    seats = db.relationship("SeatModel", back_populates="user")

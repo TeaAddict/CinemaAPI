@@ -25,26 +25,11 @@ class PlainShowtimeSchema(Schema):
 class PlainSeatsSchema(Schema):
     id = fields.Int(dump_only=True)
     seat_number = fields.Int(required=True)
-    is_booked = fields.Bool(dump_only=True)
 
 
 class PlainGenreSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
-
-
-class InputTicketSchema(Schema):
-    id = fields.Int(dump_only=True)
-    movie = fields.Int(required=True)
-    showtime = fields.Int(required=True)
-    seat = fields.Int(required=True)
-
-
-class OutputTicketSchema(Schema):
-    id = fields.Int(dump_only=True)
-    movie = fields.Str(required=True)
-    showtime = fields.DateTime(required=True)
-    seat = fields.Int(required=True)
 
 
 class RoleSchema(PlainRoleSchema):
@@ -53,7 +38,7 @@ class RoleSchema(PlainRoleSchema):
 
 class UserSchema(PlainUserSchema):
     roles = fields.List(fields.Nested(PlainRoleSchema()), dump_only=True)
-    tickets = fields.List(fields.Nested(OutputTicketSchema()), dump_only=True)
+    seats = fields.List(fields.Nested(PlainSeatsSchema()), dump_only=True)
 
 
 class ShowtimeSchema(PlainShowtimeSchema):
@@ -66,7 +51,12 @@ class MovieShowtimeSchema(PlainShowtimeSchema):
 
 
 class SeatSchema(PlainSeatsSchema):
+    user = fields.Nested(PlainUserSchema(), dump_only=True)
     showtime = fields.Nested(PlainShowtimeSchema(), dump_only=True)
+
+
+class SeatUserSchema(PlainSeatsSchema):
+    user = fields.Nested(PlainUserSchema(), dump_only=True)
 
 
 class GenreSchema(PlainGenreSchema):
@@ -79,3 +69,17 @@ class MovieSchema(PlainMovieSchema):
 
 class MovieGenreSchema(PlainMovieSchema):
     genres = fields.List(fields.Nested(PlainGenreSchema), dump_only=True)
+
+
+class UserMovieSchema(PlainUserSchema):
+    movie = fields.Str(dump_only=True)
+    showtime = fields.Str(dump_only=True)
+
+
+class MovieDataSchema(PlainSeatsSchema):
+    movie = fields.Str(dump_only=True)
+    showtime = fields.Str(dump_only=True)
+
+
+class UserAccountSchema(PlainUserSchema):
+    movies = fields.List(fields.Nested(MovieDataSchema()), dump_only=True)

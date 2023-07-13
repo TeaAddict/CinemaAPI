@@ -1,6 +1,6 @@
 # Cinema Api
 Created this api to learn some web development.
-
+This api uses postgresql database hosted by "elephantsql.com" cloud-based database service. 
 
 Current features:
 * Register/Login/refresh users with JWT tokens.

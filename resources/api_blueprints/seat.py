@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from resources.api_blueprints.user import role_required
 from db import db
 
-from schemas import PlainSeatsSchema
+from schemas import SeatUserSchema
 from models import SeatModel
 
 
@@ -41,7 +41,7 @@ class SeatDelete(MethodView):
 
 @blp.route("/<int:showtime_id>")
 class SeatGet(MethodView):
-    @blp.response(200, PlainSeatsSchema(many=True))
+    @blp.response(200, SeatUserSchema(many=True))
     def get(self, showtime_id):
         seats = SeatModel.query.filter_by(showtime_id=showtime_id).all()
         return seats
