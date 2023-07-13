@@ -10,4 +10,4 @@ class ShowtimeModel(db.Model):
     movie_id = db.Column(db.Integer, db.ForeignKey("movie.id"), nullable=False)
     movie = db.relationship("MovieModel", back_populates="showtimes")
 
-    seats = db.relationship("SeatModel", back_populates="showtime")
+    seats = db.relationship("SeatModel", cascade="all, delete", back_populates="showtime")

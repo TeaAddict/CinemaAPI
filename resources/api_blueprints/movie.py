@@ -36,10 +36,6 @@ class MovieId(MethodView):
     def delete(self, movie_id):
         movie = MovieModel().query.get_or_404(movie_id)
         try:
-            for showtime in movie.showtimes:
-                for seat in showtime.seats:
-                    db.session.delete(seat)
-                db.session.delete(showtime)
             db.session.delete(movie)
             db.session.commit()
         except SQLAlchemyError as e:
