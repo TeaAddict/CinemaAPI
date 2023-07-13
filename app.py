@@ -5,7 +5,6 @@ from flask_migrate import Migrate
 import os
 from dotenv import load_dotenv
 from db import db
-from cache import cache
 from blocklist import BLOCKLIST
 
 from resources.api_blueprints import UserBlueprint
@@ -30,13 +29,7 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["CACHE_TYPE"] = "SimpleCache"
-
     db.init_app(app)
-    cache.init_app(app)
-
-    # with app.app_context():
-    #     db.create_all()
 
     migrate = Migrate(app, db, render_as_batch=True)
 
