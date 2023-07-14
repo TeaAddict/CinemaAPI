@@ -9,4 +9,3 @@ passlib
 flask-migrate
 gunicorn
 psycopg2
-flask-caching
