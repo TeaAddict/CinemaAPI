@@ -12,7 +12,7 @@ from resources.api_blueprints import MovieBlueprint
 from resources.api_blueprints import ShowtimeBlueprint
 from resources.api_blueprints import SeatBlueprint
 from resources.api_blueprints import GenreBlueprint
-
+from resources.api_blueprints import RoleBlueprint
 
 def create_app(db_url=None):
     app = Flask(__name__)
@@ -67,6 +67,7 @@ def create_app(db_url=None):
     api.register_blueprint(ShowtimeBlueprint)
     api.register_blueprint(SeatBlueprint)
     api.register_blueprint(GenreBlueprint)
+    api.register_blueprint(RoleBlueprint)
 
     return app
 

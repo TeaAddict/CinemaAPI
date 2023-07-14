@@ -50,11 +50,6 @@ class MovieShowtimeSchema(PlainShowtimeSchema):
     seats = fields.List(fields.Nested(PlainSeatsSchema()), dump_only=True)
 
 
-class SeatSchema(PlainSeatsSchema):
-    user = fields.Nested(PlainUserSchema(), dump_only=True)
-    showtime = fields.Nested(PlainShowtimeSchema(), dump_only=True)
-
-
 class SeatUserSchema(PlainSeatsSchema):
     user = fields.Nested(PlainUserSchema(), dump_only=True)
 
@@ -69,11 +64,6 @@ class MovieSchema(PlainMovieSchema):
 
 class MovieGenreSchema(PlainMovieSchema):
     genres = fields.List(fields.Nested(PlainGenreSchema), dump_only=True)
-
-
-class UserMovieSchema(PlainUserSchema):
-    movie = fields.Str(dump_only=True)
-    showtime = fields.Str(dump_only=True)
 
 
 class MovieDataSchema(PlainSeatsSchema):

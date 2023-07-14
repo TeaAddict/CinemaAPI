@@ -49,7 +49,10 @@ class UserRegister(MethodView):
             password=pbkdf2_sha256.hash(user_data["password"])
         )
 
-        role = RoleModel(name="regular")
+        role = RoleModel.query.filter(RoleModel.name == "regular").first()
+        if not role:
+            role = RoleModel(name="regular")
+
         user.roles.append(role)
 
         try:

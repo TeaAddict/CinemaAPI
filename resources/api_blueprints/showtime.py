@@ -43,6 +43,13 @@ class ShowtimeDelete(MethodView):
 class ShowtimeAdd(MethodView):
     @blp.response(200, PlainShowtimeSchema(many=True))
     def get(self, movie_id):
-        showtimes = ShowtimeModel.query.filter_by(movie_id=movie_id).all()
-        return showtimes
+        showtime = ShowtimeModel.query.filter_by(movie_id=movie_id).all()
+        return showtime
 
+
+@blp.route("/")
+class ShowtimeGet(MethodView):
+    @blp.response(200, PlainShowtimeSchema(many=True))
+    def get(self):
+        showtimes = ShowtimeModel.query.all()
+        return showtimes
